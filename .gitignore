@@ -1,0 +1,18 @@
+# 构建产物
+build/
+out/
+*.apk
+!dist/xinda-controller.apk
+*.idsig
+
+# 需要自行从 wxapkg 提取的原版文件（不随本仓库发布）
+app/assets/wx/js/app-service.js
+app/assets/wx/js/page-frame.js
+app/assets/wx/img/
+
+# 调试/临时文件
+cmd.txt
+result.txt
+snap.png
+*.log
+__pycache__/
