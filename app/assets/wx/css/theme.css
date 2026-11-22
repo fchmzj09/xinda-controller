@@ -1,0 +1,547 @@
+/* TM追魅 · 白色简约主题（配色 + 布局重构）
+ * 仅覆盖视觉与排版，不改任何 JS / BLE / 页面结构。
+ * 选择器统一带 #page-area 前缀，优先级高于运行时注入的原版 WXSS。
+ */
+
+/* ==========================================================
+ * 1. 外壳：导航栏 / 底部 tab（线性图标 + 极简指示条）
+ * ========================================================== */
+html, body { background: #f5f6f8; }
+#app, #page-area { background: #f5f6f8; }
+#navbar { background: #fff; border-bottom: 1px solid #ebedf0; }
+#nav-title { color: #17191c; font-size: 17px; font-weight: 600; letter-spacing: .2px; }
+
+#tabbar {
+  background: #fff;
+  border-top: 1px solid #edf0f2;
+  box-shadow: 0 -2px 12px rgba(17,24,39,.03);
+}
+.wx-tab {
+  position: relative;
+  height: 56px;
+  margin: 2px 2px 4px;
+  background: transparent !important;
+  border-radius: 0;
+  color: #9aa0a6;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: .2px;
+  transition: color .15s ease;
+}
+.wx-tab.wx-tab-active { color: #17191c; font-weight: 600; }
+.wx-tab img { display: none !important; }
+.wx-tab span { transform: none; line-height: 1.2; }
+.wx-tab::before {
+  content: "";
+  display: block;
+  width: 22px;
+  height: 22px;
+  margin-bottom: 5px;
+  background-color: #9aa0a6;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  transition: background-color .15s ease;
+}
+.wx-tab.wx-tab-active::before { background-color: #17191c; }
+.wx-tab::after {
+  content: "";
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  width: 14px;
+  height: 3px;
+  border-radius: 2px;
+  background: transparent;
+  transform: translateX(-50%);
+  transition: background .15s ease;
+}
+.wx-tab.wx-tab-active::after { background: #17191c; }
+.wx-tab[data-index="0"]::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%2222%2012%2018%2012%2015%2021%209%203%206%2012%202%2012%22%2F%3E%3C%2Fsvg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%2222%2012%2018%2012%2015%2021%209%203%206%2012%202%2012%22%2F%3E%3C%2Fsvg%3E");
+}
+.wx-tab[data-index="1"]::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cline%20x1%3D%224%22%20y1%3D%2221%22%20x2%3D%224%22%20y2%3D%2214%22%2F%3E%3Cline%20x1%3D%224%22%20y1%3D%2210%22%20x2%3D%224%22%20y2%3D%223%22%2F%3E%3Cline%20x1%3D%2212%22%20y1%3D%2221%22%20x2%3D%2212%22%20y2%3D%2212%22%2F%3E%3Cline%20x1%3D%2212%22%20y1%3D%228%22%20x2%3D%2212%22%20y2%3D%223%22%2F%3E%3Cline%20x1%3D%2220%22%20y1%3D%2221%22%20x2%3D%2220%22%20y2%3D%2216%22%2F%3E%3Cline%20x1%3D%2220%22%20y1%3D%2212%22%20x2%3D%2220%22%20y2%3D%223%22%2F%3E%3Cline%20x1%3D%221%22%20y1%3D%2214%22%20x2%3D%227%22%20y2%3D%2214%22%2F%3E%3Cline%20x1%3D%229%22%20y1%3D%228%22%20x2%3D%2215%22%20y2%3D%228%22%2F%3E%3Cline%20x1%3D%2217%22%20y1%3D%2216%22%20x2%3D%2223%22%20y2%3D%2216%22%2F%3E%3C%2Fsvg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cline%20x1%3D%224%22%20y1%3D%2221%22%20x2%3D%224%22%20y2%3D%2214%22%2F%3E%3Cline%20x1%3D%224%22%20y1%3D%2210%22%20x2%3D%224%22%20y2%3D%223%22%2F%3E%3Cline%20x1%3D%2212%22%20y1%3D%2221%22%20x2%3D%2212%22%20y2%3D%2212%22%2F%3E%3Cline%20x1%3D%2212%22%20y1%3D%228%22%20x2%3D%2212%22%20y2%3D%223%22%2F%3E%3Cline%20x1%3D%2220%22%20y1%3D%2221%22%20x2%3D%2220%22%20y2%3D%2216%22%2F%3E%3Cline%20x1%3D%2220%22%20y1%3D%2212%22%20x2%3D%2220%22%20y2%3D%223%22%2F%3E%3Cline%20x1%3D%221%22%20y1%3D%2214%22%20x2%3D%227%22%20y2%3D%2214%22%2F%3E%3Cline%20x1%3D%229%22%20y1%3D%228%22%20x2%3D%2215%22%20y2%3D%228%22%2F%3E%3Cline%20x1%3D%2217%22%20y1%3D%2216%22%20x2%3D%2223%22%20y2%3D%2216%22%2F%3E%3C%2Fsvg%3E");
+}
+.wx-tab[data-index="2"]::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%224%22%20y%3D%224%22%20width%3D%2216%22%20height%3D%2216%22%20rx%3D%222%22%2F%3E%3Crect%20x%3D%229%22%20y%3D%229%22%20width%3D%226%22%20height%3D%226%22%2F%3E%3Cpath%20d%3D%22M9%201v3M15%201v3M9%2020v3M15%2020v3M20%209h3M20%2014h3M1%209h3M1%2014h3%22%2F%3E%3C%2Fsvg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%224%22%20y%3D%224%22%20width%3D%2216%22%20height%3D%2216%22%20rx%3D%222%22%2F%3E%3Crect%20x%3D%229%22%20y%3D%229%22%20width%3D%226%22%20height%3D%226%22%2F%3E%3Cpath%20d%3D%22M9%201v3M15%201v3M9%2020v3M15%2020v3M20%209h3M20%2014h3M1%209h3M1%2014h3%22%2F%3E%3C%2Fsvg%3E");
+}
+.wx-tab[data-index="3"]::before {
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M21%2015v4a2%202%200%200%201-2%202H5a2%202%200%200%201-2-2v-4%22%2F%3E%3Cpolyline%20points%3D%227%2010%2012%2015%2017%2010%22%2F%3E%3Cline%20x1%3D%2212%22%20y1%3D%2215%22%20x2%3D%2212%22%20y2%3D%223%22%2F%3E%3C%2Fsvg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M21%2015v4a2%202%200%200%201-2%202H5a2%202%200%200%201-2-2v-4%22%2F%3E%3Cpolyline%20points%3D%227%2010%2012%2015%2017%2010%22%2F%3E%3Cline%20x1%3D%2212%22%20y1%3D%2215%22%20x2%3D%2212%22%20y2%3D%223%22%2F%3E%3C%2Fsvg%3E");
+}
+#ptr .ptr-spinner { border-color: rgba(23,25,28,.14); border-top-color: #17191c; }
+
+/* ==========================================================
+ * 2. 页面底色 / 通用
+ * ========================================================== */
+#page-area page { background: #f5f6f8; color: #17191c; }
+#page-area .main-container,
+#page-area .device-container,
+#page-area .bgpage { background: #f5f6f8; color: #17191c; }
+#page-area .device-container,
+#page-area .scroll-text { padding-bottom: 88px; }
+
+/* 通用卡片 */
+#page-area .dashboard,
+#page-area .list-content,
+#page-area .mainTemper,
+#page-area .page__bd,
+#page-area .vview,
+#page-area .dyhview2,
+#page-area .section_gap,
+#page-area .section_gap_switch,
+#page-area .scroll-view-container,
+#page-area .scroll-view-rev,
+#page-area .view-input-send,
+#page-area .s_view {
+  background: #fff;
+  color: #17191c;
+  border: 1px solid #ebedf0;
+  box-shadow: 0 2px 8px rgba(17,24,39,.04);
+}
+
+/* 内联颜色兜底（WXML 里写死的白色文字） */
+#page-area [style*="antiquewhite"],
+#page-area [style*="color:white"],
+#page-area [style*="color: white"],
+#page-area [style*="color:#fff"],
+#page-area [style*="color: #fff"] { color: #17191c !important; }
+
+/* ==========================================================
+ * 3. 控制器状态页（仪表盘重构）
+ * ========================================================== */
+
+/* 顶部两行信息 -> 一张紧凑信息卡 */
+#page-area .device-container > wx-view[style*="height: 50px"] {
+  height: auto !important;
+  margin: 8px 16px 0 !important;
+  padding: 11px 16px !important;
+  background: #fff;
+  border: 1px solid #ebedf0;
+  display: flex !important;
+  align-items: center;
+}
+#page-area .device-container > wx-view[style*="height: 50px"]:nth-of-type(1) {
+  border-radius: 16px 16px 0 0;
+  border-bottom: 0;
+  margin-bottom: 0 !important;
+}
+#page-area .device-container > wx-view[style*="height: 50px"]:nth-of-type(2) {
+  border-radius: 0 0 16px 16px;
+  margin-top: 0 !important;
+}
+#page-area .device-container > wx-view[style*="height: 50px"] wx-text {
+  color: #6b7280 !important;
+  font-size: 13px;
+}
+#page-area .device-container > wx-view[style*="height: 50px"]:nth-of-type(1) wx-text {
+  color: #17191c !important;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* 仪表卡片 */
+#page-area .device-container .mainTemper {
+  height: auto !important;
+  margin: 12px 16px 0 !important;
+  padding: 22px 6px;
+  border-radius: 20px;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+}
+#page-area .device-container .mainTemper .index_view {
+  width: auto !important;
+  flex: 1 1 0;
+  margin: 0 !important;
+  padding: 0 8px !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+#page-area .device-container .mainTemper .index_view + .index_view {
+  border-left: 1px solid #f1f2f4;
+}
+
+/* 大数字与单位 */
+#page-area .device-container [style*="font-size: 40"] {
+  font-size: 56px !important;
+  line-height: 1.02 !important;
+  letter-spacing: -1.5px;
+}
+#page-area .device-container [style*="font-size: 30"] {
+  font-size: 22px !important;
+  line-height: 1.25 !important;
+  letter-spacing: -.3px;
+}
+#page-area .device-container .tempView {
+  color: #8a919c !important;
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 6px;
+}
+#page-area .device-container .mainTemper .index_view:only-child .tempView {
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* 故障信息保留红色，但收成小字 */
+#page-area .device-container .index_view [style*="color: red"] {
+  font-size: 13px !important;
+  color: #e5484d !important;
+}
+
+/* 档位/状态行 -> 胶囊标签 */
+#page-area .device-container > wx-view[style*="color: white"][style*="display: flex"] {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 8px;
+  margin: 16px 16px 0 !important;
+}
+#page-area .device-container > wx-view[style*="color: white"][style*="display: flex"] > wx-view {
+  margin: 0 !important;
+  padding: 6px 12px;
+  background: #f2f4f7;
+  border-radius: 999px;
+  font-size: 12px;
+  color: #5f6672 !important;
+}
+#page-area .device-container > wx-view[style*="color: white"][style*="display: flex"] > wx-view.ss1 {
+  background: #17191c !important;
+  color: #fff !important;
+  border-radius: 999px !important;
+  font-weight: 600;
+}
+
+/* 底部占位与设备名 */
+#page-area .device-container .flex_column.flex_center { height: 8vh !important; }
+#page-area .device-container .text_name { font-size: 12px; color: #b0b6bd; }
+
+/* ==========================================================
+ * 4. 设置页（基础 / 高级参数）：折叠卡片 + 标签值行
+ * ========================================================== */
+#page-area .scroll-text {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  height: auto;
+  max-height: none;
+  padding: 12px 14px 96px;
+  background: transparent;
+}
+
+/* 折叠标题 */
+#page-area .list-content {
+  height: auto !important;
+  line-height: 1.4 !important;
+  margin: 10px 0 0 !important;
+  padding: 16px !important;
+  border-radius: 16px !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  text-align: left;
+  background: #fff !important;
+  border: 1px solid #ebedf0;
+  box-shadow: 0 2px 8px rgba(17,24,39,.04);
+}
+#page-area .list-content > wx-view { padding: 0 !important; }
+#page-area .list-content > wx-view:empty { display: none; }
+/* 原版 WXSS 给标题设了 margin-left:-160px（旧布局用），新布局必须清掉 */
+#page-area .list-content wx-text { margin-left: 0 !important; }
+#page-area .list-content wx-text[style*="font-size:medium"],
+#page-area .list-content wx-text[style*="font-size: medium"] {
+  font-size: 15px !important;
+  font-weight: 600;
+  color: #17191c;
+}
+#page-area .list-content .zdimgLogo {
+  width: 18px !important;
+  height: 18px !important;
+  margin: 0 !important;
+  opacity: .35;
+}
+
+/* 展开内容 */
+#page-area .list-text {
+  padding: 0 !important;
+  text-indent: 0 !important;
+}
+#page-area .list-text:not(.hidden-content) { margin-bottom: 4px; }
+#page-area .page__bd {
+  margin: 8px 0 0 !important;
+  padding: 2px 16px 10px !important;
+  border-radius: 16px !important;
+  background: #fff !important;
+  border: 1px solid #ebedf0;
+  box-shadow: 0 2px 8px rgba(17,24,39,.04);
+}
+
+/* 参数行：左标签 / 右值 */
+#page-area .dyhview {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) auto;
+  align-items: center;
+  column-gap: 12px;
+  row-gap: 4px;
+  width: 100%;
+  padding: 12px 0;
+  border-radius: 0;
+}
+#page-area .dyhview + .dyhview { border-top: 1px solid #f4f5f7; }
+#page-area .dyhview > wx-text.section__title {
+  width: auto !important;
+  font-size: 13px;
+  font-weight: 400;
+  color: #6b7280;
+  text-align: left;
+}
+#page-area .dyhview > wx-picker,
+#page-area .dyhview > wx-view:has(> wx-switch),
+#page-area .dyhview > wx-switch { justify-self: end; }
+
+/* 下拉值 -> 浅灰胶囊 */
+#page-area .picker {
+  height: auto !important;
+  line-height: 1.2 !important;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+  color: #17191c !important;
+  background: #f2f4f7;
+  border-radius: 9px;
+  padding: 7px 11px !important;
+  margin: 0 !important;
+  max-width: 56vw;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 数字输入 */
+#page-area .dyhview > wx-text.inputText {
+  justify-self: end;
+  height: auto !important;
+  margin: 0 !important;
+  min-width: 64px;
+  padding: 6px 10px;
+  border: 1px solid #e3e6ea;
+  border-radius: 9px;
+  background: #fff;
+  font-size: 14px;
+  color: #17191c;
+  text-align: center;
+}
+
+/* 开关 */
+#page-area .dyhview wx-switch.swcheck { margin-left: 0 !important; }
+#page-area .wx-switch-input.wx-switch-input-checked::before { background: #17191c; }
+
+/* 分隔线由行边框代替 */
+#page-area .long-line { display: none; }
+
+/* 自学习按钮行 */
+#page-area .dyhview:has(> wx-button) {
+  display: flex;
+  gap: 12px;
+  padding: 6px 0 10px;
+}
+#page-area .dyhview > wx-button { flex: 1; margin: 0 !important; }
+#page-area .studybtn {
+  background: #f2f4f7 !important;
+  color: #17191c !important;
+  border: 0 !important;
+  border-radius: 12px !important;
+  height: 44px !important;
+  line-height: 44px !important;
+  font-size: 15px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+#page-area .studybtn:active { background: #e8ebef !important; }
+
+/* 保存按钮 -> 黑色主按钮 */
+#page-area .hbtn {
+  display: block;
+  width: 100% !important;
+  height: 46px !important;
+  line-height: 46px !important;
+  margin: 16px 0 6px !important;
+  padding: 0 !important;
+  background: #17191c !important;
+  color: #fff !important;
+  border: 0 !important;
+  border-radius: 12px !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  box-shadow: none !important;
+}
+#page-area .hbtn:active { opacity: .85; }
+
+/* 恢复出厂设置 -> 红色描边按钮 */
+#page-area .bt-rest {
+  display: block;
+  width: 100% !important;
+  height: 46px !important;
+  line-height: 46px !important;
+  margin: 18px 0 8px !important;
+  padding: 0 !important;
+  background: #fff !important;
+  color: #e5484d !important;
+  border: 1px solid #f5c2c5 !important;
+  border-radius: 12px !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  box-shadow: none !important;
+}
+
+/* 其余按钮 */
+#page-area .bt-clear,
+#page-area .bt-jump2 {
+  background: #fff !important;
+  color: #17191c !important;
+  border: 1px solid #dfe3e8;
+  border-radius: 10px;
+  box-shadow: none !important;
+}
+#page-area .bt-jump {
+  background: #17191c !important;
+  color: #fff !important;
+  border: 0;
+  border-radius: 10px;
+  box-shadow: none !important;
+}
+
+/* 密码弹窗 */
+#page-area .modalDlg {
+  top: 26% !important;
+  padding: 24px 20px !important;
+  border-radius: 20px !important;
+  box-shadow: 0 24px 64px rgba(17,24,39,.18) !important;
+}
+#page-area .userTitle { font-size: 17px !important; font-weight: 600; color: #17191c; }
+#page-area .wish_put {
+  background: #fff !important;
+  border: 1px solid #dfe3e8 !important;
+  border-radius: 10px !important;
+  padding: 11px 12px !important;
+  font-size: 15px;
+}
+#page-area .wishbnt {
+  background: #17191c !important;
+  color: #fff !important;
+  border-radius: 12px !important;
+  height: 46px;
+  line-height: 46px;
+  padding: 0 !important;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* ==========================================================
+ * 5. OTA 页
+ * ========================================================== */
+#page-area .scroll-view-container {
+  margin: 12px 14px 0 !important;
+  padding: 12px !important;
+  border-radius: 16px !important;
+}
+#page-area .scroll-view-rev { background: #fff !important; }
+#page-area .text-rev { color: #374151 !important; font-size: 12px; line-height: 1.6; }
+#page-area .view-bt-send {
+  display: flex;
+  gap: 12px;
+  margin: 12px 14px 0 !important;
+}
+#page-area .bt-jump,
+#page-area .bt-clear {
+  flex: 1;
+  width: auto !important;
+  height: 46px !important;
+  line-height: 46px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  border-radius: 12px !important;
+}
+#page-area .bt-clear {
+  background: #fff !important;
+  color: #17191c !important;
+  border: 1px solid #dfe3e8 !important;
+}
+
+/* ==========================================================
+ * 6. 扫描列表页（卡片列表）
+ * ========================================================== */
+#page-area .main-container { padding: 8px 12px 0; }
+#page-area .list-item {
+  height: 66px !important;
+  margin-bottom: 8px;
+  background: #fff;
+  border: 1px solid #ebedf0;
+  border-radius: 16px;
+  box-shadow: 0 1px 4px rgba(17,24,39,.03);
+}
+#page-area .list-item-img {
+  width: 38px !important;
+  height: 38px !important;
+  left: 14px !important;
+  top: 14px !important;
+  border-radius: 10px;
+}
+#page-area .list-item-name {
+  left: 66px !important;
+  right: 64px !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  line-height: 66px !important;
+  font-size: 16px !important;
+  font-weight: 600;
+  color: #17191c;
+}
+#page-area .list-item-rssi-img { top: 22px !important; right: 18px !important; }
+#page-area .list-item-rssi {
+  top: 40px !important;
+  right: 8px !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  color: #8a919c !important;
+}
+#page-area .list-item-line { display: none; }
+#page-area .list-item-hover { background: #f5f6f8 !important; }
+#page-area .notice { font-size: 12px; color: #9aa0a6; margin: 10px 0; }
+#page-area .gap { height: 8px !important; }
+
+/* ==========================================================
+ * 7. 其他
+ * ========================================================== */
+#page-area .progress_dot { background: #17191c; }
+#page-area .progress_info { color: #17191c; }
+#page-area .loading { background: #e8ebef; }
+#page-area .loading_h { background: #17191c; }
+#page-area .loading_h::before { background: linear-gradient(90deg, #17191c, #5f6672); }
+#page-area .numq { background: #17191c; color: #fff; }
+#page-area .numqnei { border-color: #fff; }
+#page-area .numqnei::after { border-top-color: #17191c; }
+#page-area .logonanme { background: #f2f4f7; color: #17191c !important; }
+#page-area .select {
+  background: #fff;
+  border: 1px solid #dfe3e8;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(17,24,39,.10);
+}
+#page-area .select .type { color: #5f6672; border-top: 1px solid #eef0f3; }
+#page-area .circlebutton,
+#page-area .circlewhitebutton { background: #f2f4f7; color: #17191c; border: none; }
