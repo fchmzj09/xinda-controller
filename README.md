@@ -77,6 +77,3 @@ adb install -r dist/xinda-controller.apk
 App 每 300ms 检查 `files/cmd.txt`，把其中 JS 的执行结果写到 `files/result.txt`；
 `NativeBridge.snapshot()` 可把 WebView 截图写到 `files/snap.png`。仅用于开发。
 
-## 许可
-
-MIT — 详见 [LICENSE](LICENSE)。原微信小程序代码不在本仓库内，其权利归原作者所有。
